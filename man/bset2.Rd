@@ -42,7 +42,7 @@ bset2(
 \item{deltahigh}{lower bound of delta; this real number must be strictly greater than 1}
 }
 \value{
-bset2 returns a list with two elements; the first element is a dataframe containing the parameters collected from the three regressions; the second element is a matrix containing the quantiles of the empirical distribution of the treatment effect
+bset2 returns a list with two elements; the first element is a dataframe containing the parameters collected from the three regressions; the second element is a matrix containing the quantiles of the empirical distribution of the bias-adjusted treatment effect
 }
 \description{
 This funcition runs short, intermediate and auxiliary regressions; collect parameters; and, compute quantiles of the empirical distribution of the treatment effect.
@@ -53,6 +53,7 @@ This funcition runs short, intermediate and auxiliary regressions; collect param
 a0 <- 0.5;a1 <- 0.25;a2 <- 0.75;a3 <- 1.0
 a4 <- -0.75; a5 <- -0.25
 # Regressors
+set.seed(999)
 x1 <- rnorm(100, mean=0, sd=1);x2 <- rnorm(100, mean=1, sd=2)
 x3 <- rnorm(100, mean=2, sd=3);x4 <- rnorm(100, mean=3, sd=4)
 x5 <- rep(c(0,1),50)

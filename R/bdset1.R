@@ -1,13 +1,14 @@
 
-#' Bounding set for treatment effect
+#' Bounding set for treatment effect with user supplied parameters
 #'
-#' This funcition runs short, intermediate and auxiliary regressions; collect parameters; and, compute quantiles of the empirical distribution of the treatment effect.
-#' @param data dataframe containing all the relevant variables
-#' @param outcome name of outcome variable in the dataframe, e.g. "y"
-#' @param treatment name of treatment variable in the dataframe, e.g. "x1"
-#' @param shortreg short regression as formula; e.g. y ~ x1
-#' @param intreg intermediate regression as formula; e.g. y ~ x1 + x2
-#' @param auxreg auxiliary regression as formula; e.g. x1 ~ x2
+#' This funcition computes quantiles of the empirical distribution of the treatment effect using parameters about the three regressions (short, intermediate and auxiliary) supplied by user.
+#' @param beta0 treatment effect in short regression
+#' @param R0 R-squared in short regression
+#' @param betatilde treatment effect in intermediate regression
+#' @param Rtilde R-squared in intermediate regression
+#' @param sigmay standard deviation of outcome variable
+#' @param sigmax standard deviation of treatment variable
+#' @param taux variance of residual in auxiliary regression (treatment regressed on all included controls)
 #' @param N used to contruct the grid on which the cubic equation is solved; the grid is N*N; default is N=100
 #' @param Rlow Rmax in low regime is Rlow*Rtilde; default is Rlow=1.30
 #' @param Rhigh Rmax in low regime is Rlow*Rtilde; default is Rlow=2.47
@@ -17,7 +18,7 @@
 #' @importFrom magrittr "%>%"
 #' @importFrom rlang .data
 #'
-#' @return bset2 returns a list with two elements; the first element is a dataframe containing the parameters collected from the three regressions; the second element is a matrix containing the quantiles of the empirical distribution of the bias-adjusted treatment effect
+#' @return bset1 returns a list with two elements; the first element is a dataframe containing the parameters supplied by the user about the three regressions; the second element is a matrix containing the quantiles of the empirical distribution of the bias-adjusted treatment effect
 #' @references Basu, D. (2021). "Bounding Sets for Treatment Effects with Proportional Selection". Economics Department Working Paper Series. 307. University of Massachusetts Amhers. URL: https://scholarworks.umass.edu/econ_workingpaper/307
 #'
 #' @export
@@ -37,47 +38,48 @@
 #' y <- a0 + a1*x1 + a2*x2 + a3*x3 + a4*x4 + a5*x5
 #' # Create data frame
 #' d1 <- data.frame(y=y,x1=x1,x2=x2,x3=x3,x4=x4,x5=x5)
+#' # Run short regression and collect paramters
+#' sreg <- stats::lm(y~x1,data=d1)
+#' beta0 <- sreg$coefficients["x1"]
+#' R0 <- summary(sreg)$r.squared
+#' # Run intermediate regression and collect parameters
+#' ireg <- stats::lm(y~x1+x2+x3,data=d1)
+#' betatilde <- ireg$coefficients["x1"]
+#' Rtilde <- summary(ireg)$r.squared
+#' # Run auxiliary regression and collect variance of residuals
+#' auxreg <- stats::lm(x1~x2+x3,data=d1)
+#' taux <- var(auxreg$residuals, na.rm = TRUE)
+#' # Standard deviation of outcome variable
+#' sigmay <- sd(d1$y, na.rm = TRUE)
+#' # Stadard deviation of treatment variable
+#' sigmax <- sd(d1$x1, na.rm=TRUE)
 #' # Generate bounding set for treatment effect with x4 and x5 omitted
-#' bset2(data = d1,
-#' outcome = "y",
-#' treatment = "x1",
-#' shortreg = y ~ x1,
-#' intreg = y ~ x1 + x2 + x3,
-#' auxreg = x1 ~ x2 + x3,
+#' bset1(
+#' beta0 = beta0,
+#' R0 = R0,
+#' betatilde = betatilde,
+#' Rtilde = Rtilde,
+#' sigmay = sigmay,
+#' sigmax = sigmax,
+#' taux = taux,
 #' deltalow = 0.01,
-#' deltahigh=5.00)
+#' deltahigh=5.00
+#' )
 
-bset2 <- function(
-  data,
-  outcome,
-  treatment,
-  shortreg,
-  intreg,
-  auxreg,
+bset1 <- function(
+  beta0,
+  R0,
+  betatilde,
+  Rtilde,
+  sigmay,
+  sigmax,
+  taux,
   N=100,
   Rlow=1.30,
   Rhigh=2.47,
   deltalow,
   deltahigh
 ){
-
-  # Is the dependent variable in the short regression the
-  # specified outcome variable?
-  if (sum(all.vars(shortreg[[2]]) != paste(outcome))==1) {
-    stop("Note: Dependent variable in short regression incorrect\n")
-  }
-
-  # Is the dependent variable in the intermediate regression the
-  # specified outcome variable?
-  if (sum(all.vars(intreg[[2]]) != paste(outcome))==1) {
-    stop("Note: Dependent variable in short regression incorrect\n")
-  }
-
-  # Is the dependent variable in the auxiliary regression the
-  # specified treatment variable?
-  if (sum(all.vars(auxreg[[2]]) != paste(treatment))==1) {
-    stop("Note: Dependent variable in short regression incorrect\n")
-  }
 
   # Make sure xlow <1 and xhigh > 1
   if (deltalow>=1) {
@@ -159,7 +161,7 @@ bset2 <- function(
       dplyr::mutate(
         # Evalutate function at grid points
         z = mydisc(.data$x,.data$y)
-        ) %>%
+      ) %>%
       as.data.frame()
 
 
@@ -313,32 +315,21 @@ bset2 <- function(
   }
 
   # ------------------------------------------------------------------ #
-  # ------- Run the three regressions and collect parameters --------- #
-  # Outcome variable
-  myd1 <- data[,paste(outcome)]
-  # Treatment variable
-  myd2 <- data[,paste(treatment)]
-
-  # Short regression
-  reg1 <- stats::lm(shortreg,data = data)
-  # Intermediate regression
-  reg2 <- stats::lm(intreg,data = data)
-  # Auxiliary regression
-  reg3 <- stats::lm(auxreg,data = data)
+  # -------------- Parameters about the three regressions ------------ #
 
   #--- Parameters
   # From Short regression
-  beta0 <- stats::coefficients(reg1)[paste(treatment)]
-  R0 <- summary(reg1)$r.squared
+  beta0 <- beta0
+  R0 <- R0
   # From Intermediate regression
-  betatilde <- stats::coefficients(reg2)[paste(treatment)]
-  Rtilde <- summary(reg2)$r.squared
+  betatilde <- betatilde
+  Rtilde <- Rtilde
   # From Auxiliary regression
-  taux <- stats::var(reg3$residuals, na.rm = TRUE)
+  taux <- taux
   # Outcome variable
-  sigmay <- stats::sd(myd1, na.rm = TRUE)
+  sigmay <- sigmay
   # Treatment variable
-  sigmax <- stats::sd(myd2, na.rm = TRUE)
+  sigmax <- sigmax
 
   # ---- Collect parameters as a data frame
   myparm <- data.frame(
