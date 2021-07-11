@@ -4,7 +4,7 @@ Version: 0.0.0.9000
 Authors@R: 
     person("Deepankar", "Basu", email = "dbasu@econs.umass.edu",
   role = c("aut", "cre"))
-Description: This package computes quantiles of the empirical distribution of the treatment effect in a model with omitted variables. Relative selection on unobservables is captuered by delta; R-squared in the hypothetical long regression is denoted by Rmax. The main function runs the short, the intermediate and the auxiliary regressions, and collects relevant parameters. Using those parameters, quantiles of the empirical distribution of the treatment effect is computed for four regimes: low delta, low Rmax; low delta, high Rmax; high delta, low Rmax; high delta, low Rmax.
+Description: This package computes quantiles of the empirical distribution of the treatment effect in a model with omitted variables where selection on unobservables is proportional to selection on observables.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true

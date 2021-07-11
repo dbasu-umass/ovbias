@@ -27,13 +27,16 @@ empirical distribution of the bias-adjusted treatment effect, `bset1()`
 and `bset2()`.
 
 To use the `bset1()` function, the user will need to run the short,
-intermediate and auxiliary regressions, collect the following parameters
-\* beta0: treatment effect in short regression \* R0: R-squared in short
-regression \* betatilde: treatment effect in intermediate regression \*
-Rtilde: R-squared in intermediate regression \* taux: variance of
-residual in auxiliary regression \* sigmay: standard deviation of the
-outcome variable \* sigmax: standard deviation of the treatment variable
-and supply them to `bset`()\`.
+intermediate and auxiliary regressions, collect relevant parameters and
+supply them to `bset`()\`. The relevant parameters are:
+
+  - beta0: treatment effect in short regression
+  - R0: R-squared in short regression
+  - betatilde: treatment effect in intermediate regression
+  - Rtilde: R-squared in intermediate regression
+  - taux: variance of residual in auxiliary regression
+  - sigmay: standard deviation of the outcome variable
+  - sigmax: standard deviation of the treatment variable.
 
 To use the `bset2()` function, the user will need to run supply a data
 frame (with all relevant variables), name of the outcome variable, name
@@ -168,9 +171,27 @@ bset2(
 
 To see the relevant parameters that emerged from the short, intermediate
 and auxiliary regressions, look at the first element of the list,
-`$bsetpar`; to see the quantiles of the empirical distribution of the
-bias-adjusted treatment effect look at the second element of the list,
-`$bsetqnt`.
+`$bsetpar`, and recall:
+
+  - beta0: treatment effect in short regression
+  - R0: R-squared in short regression
+  - betatilde: treatment effect in intermediate regression
+  - Rtilde: R-squared in intermediate regression
+  - taux: variance of residual in auxiliary regression
+  - sigmay: standard deviation of the outcome variable
+  - sigmax: standard deviation of the treatment variable.
+
+To see the quantiles of the empirical distribution of the bias-adjusted
+treatment effect look at the second element of the list, `$bsetqnt`. The
+rownames of this matrix is informative about the region used for
+constructing the bias-adjusted treatment effect. For example, the LL
+(URR) row refers to a low `delta`, low `Rmax` regime, where the roots
+have been computed over the URR area. Aa another example, note that the
+LH (NURR) row refers to a low `delta`, high `Rmax` regime, where the
+roots have been computed over the NURR area. Recall that for the NURR
+area, there are three real roots and we choose the root whose empirical
+distribution is closest to the empirical distribution of the root
+computed over the URR area (using the same regime).
 
 ### Using the `bset1()` function
 
@@ -248,3 +269,6 @@ bset1(
 #> HH (URR)  0.344  -9.700  -9.642  -9.265 -9.095 -9.083
 #> HH (NURR) 0.656 -12.595 -12.274 -10.059 -9.234 -9.181
 ```
+
+Note that the results are identical to the ones we got above using the
+`bset2()` function.
