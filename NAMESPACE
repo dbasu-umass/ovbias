@@ -2,3 +2,4 @@
 
 export(bset2)
 importFrom(magrittr,"%>%")
+importFrom(rlang,.data)

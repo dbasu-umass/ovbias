@@ -19,11 +19,11 @@ bset2(
 )
 }
 \arguments{
-\item{data}{dataframe}
+\item{data}{dataframe containing all the relevant variables}
 
-\item{outcome}{name of outcome variable as character, e.g. "y"}
+\item{outcome}{name of outcome variable in the dataframe, e.g. "y"}
 
-\item{treatment}{name of treatment variable as character, e.g. "x1"}
+\item{treatment}{name of treatment variable in the dataframe, e.g. "x1"}
 
 \item{shortreg}{short regression as formula; e.g. y ~ x1}
 
@@ -31,7 +31,7 @@ bset2(
 
 \item{auxreg}{auxiliary regression as formula; e.g. x1 ~ x2}
 
-\item{N}{number of points on the grid is N*N; default is N=100}
+\item{N}{used to contruct the grid on which the cubic equation is solved; the grid is N*N; default is N=100}
 
 \item{Rlow}{Rmax in low regime is Rlow*Rtilde; default is Rlow=1.30}
 
@@ -42,10 +42,10 @@ bset2(
 \item{deltahigh}{lower bound of delta; this real number must be strictly greater than 1}
 }
 \value{
-
+bset2 returns a list with two elements; the first element is a dataframe containing the parameters collected from the three regressions; the second element is a matrix containing the quantiles of the empirical distribution of the treatment effect
 }
 \description{
-Run short, intermediate and auxiliary regressions; collect parameters; and, compute quantiles of the empirical distribution of the treatment effect.
+This funcition runs short, intermediate and auxiliary regressions; collect parameters; and, compute quantiles of the empirical distribution of the treatment effect.
 }
 \examples{
 # Generate simulated data
@@ -61,5 +61,15 @@ y <- a0 + a1*x1 + a2*x2 + a3*x3 + a4*x4 + a5*x5
 # Create data frame
 d1 <- data.frame(y=y,x1=x1,x2=x2,x3=x3,x4=x4,x5=x5)
 # Generate bounding set for treatment effect with x4 and x5 omitted
-bset2(data = d1,outcome = "y",treatment = "x1",shortreg = y ~ x1,intreg = y ~ x1 + x2 + x3,auxreg = x1 ~ x2 + x3, deltalow = 0.01, deltahigh=5.00)
+bset2(data = d1,
+outcome = "y",
+treatment = "x1",
+shortreg = y ~ x1,
+intreg = y ~ x1 + x2 + x3,
+auxreg = x1 ~ x2 + x3,
+deltalow = 0.01,
+deltahigh=5.00)
+}
+\references{
+Basu, D. (2021). "Bounding Sets for Treatment Effects with Proportional Selection". Economics Department Working Paper Series. 307. University of Massachusetts Amhers. URL: https://scholarworks.umass.edu/econ_workingpaper/307
 }

@@ -1,22 +1,25 @@
 
 #' Bounding set for treatment effect
 #'
-#' Run short, intermediate and auxiliary regressions; collect parameters; and, compute quantiles of the empirical distribution of the treatment effect.
-#' @param data dataframe
-#' @param outcome name of outcome variable as character, e.g. "y"
-#' @param treatment name of treatment variable as character, e.g. "x1"
+#' This funcition runs short, intermediate and auxiliary regressions; collect parameters; and, compute quantiles of the empirical distribution of the treatment effect.
+#' @param data dataframe containing all the relevant variables
+#' @param outcome name of outcome variable in the dataframe, e.g. "y"
+#' @param treatment name of treatment variable in the dataframe, e.g. "x1"
 #' @param shortreg short regression as formula; e.g. y ~ x1
 #' @param intreg intermediate regression as formula; e.g. y ~ x1 + x2
 #' @param auxreg auxiliary regression as formula; e.g. x1 ~ x2
-#' @param N number of points on the grid is N*N; default is N=100
+#' @param N used to contruct the grid on which the cubic equation is solved; the grid is N*N; default is N=100
 #' @param Rlow Rmax in low regime is Rlow*Rtilde; default is Rlow=1.30
 #' @param Rhigh Rmax in low regime is Rlow*Rtilde; default is Rlow=2.47
 #' @param deltalow lower bound of delta; this real number must be strictly less than 1
 #' @param deltahigh lower bound of delta; this real number must be strictly greater than 1
 #'
 #' @importFrom magrittr "%>%"
+#' @importFrom rlang .data
 #'
-#' @return
+#' @return bset2 returns a list with two elements; the first element is a dataframe containing the parameters collected from the three regressions; the second element is a matrix containing the quantiles of the empirical distribution of the treatment effect
+#' @references Basu, D. (2021). "Bounding Sets for Treatment Effects with Proportional Selection". Economics Department Working Paper Series. 307. University of Massachusetts Amhers. URL: https://scholarworks.umass.edu/econ_workingpaper/307
+#'
 #' @export
 #'
 #'
@@ -34,7 +37,14 @@
 #' # Create data frame
 #' d1 <- data.frame(y=y,x1=x1,x2=x2,x3=x3,x4=x4,x5=x5)
 #' # Generate bounding set for treatment effect with x4 and x5 omitted
-#' bset2(data = d1,outcome = "y",treatment = "x1",shortreg = y ~ x1,intreg = y ~ x1 + x2 + x3,auxreg = x1 ~ x2 + x3, deltalow = 0.01, deltahigh=5.00)
+#' bset2(data = d1,
+#' outcome = "y",
+#' treatment = "x1",
+#' shortreg = y ~ x1,
+#' intreg = y ~ x1 + x2 + x3,
+#' auxreg = x1 ~ x2 + x3,
+#' deltalow = 0.01,
+#' deltahigh=5.00)
 
 bset2 <- function(
   data,
@@ -134,17 +144,23 @@ bset2 <- function(
   qnturr <- function(xlow, xhigh, betatilde,
                      Rtilde, RUB, N=100) {
 
+    z <- NULL
+
     # Delta
     x1 <- seq(xlow,xhigh,length.out = N)
     # Rmax
     y1 <- seq(Rtilde+0.01,RUB,length.out = N)
     # All combinations of delta, Rmax
     mtrx2d <-  expand.grid(x1,y1)
-    # Evalutate function at grid points
-    isoc1 <- mydisc(mtrx2d[,1],mtrx2d[,2])
     # Create data frame for plot
-    consol <- cbind.data.frame(mtrx2d,isoc1)
-    names(consol) <- c('x','y','z')
+    consol_temp <- data.frame(x=mtrx2d[,1],y=mtrx2d[,2])
+    consol <- consol_temp %>%
+      dplyr::mutate(
+        # Evalutate function at grid points
+        z = mydisc(.data$x,.data$y)
+        ) %>%
+      as.data.frame()
+
 
     #---- Empirical distribution of bstar
     # Choose observations with z==1
@@ -195,17 +211,21 @@ bset2 <- function(
 
   qntnurr <- function(xlow, xhigh, betatilde,
                       Rtilde, RUB, N=100) {
+    z <- NULL
     # Delta
     x1 <- seq(xlow,xhigh,length.out = N)
     # Rmax
     y1 <- seq(Rtilde+0.01,RUB,length.out = N)
     # All combinations of delta, Rmax
     mtrx2d <-  expand.grid(x1,y1)
-    # Evalutate function at grid points
-    isoc1 <- mydisc(mtrx2d[,1],mtrx2d[,2])
     # Create data frame for plot
-    consol <- cbind.data.frame(mtrx2d,isoc1)
-    names(consol) <- c('x','y','z')
+    consol_temp <- data.frame(x=mtrx2d[,1],y=mtrx2d[,2])
+    consol <- consol_temp %>%
+      dplyr::mutate(
+        # Evalutate function at grid points
+        z = mydisc(.data$x,.data$y)
+      ) %>%
+      as.data.frame()
 
 
     #---- Empirical distribution of betastar
