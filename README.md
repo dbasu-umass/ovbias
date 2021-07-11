@@ -74,6 +74,7 @@ a4 <- -0.75
 a5 <- -0.25
 
 # Regressors
+set.seed(999)
 x1 <- rnorm(100, mean=0, sd=1)
 x2 <- rnorm(100, mean=1, sd=2)
 x3 <- rnorm(100, mean=2, sd=3)
@@ -110,19 +111,19 @@ bset2(
   deltahigh=5.00
   )
 #> $bsetpar
-#>   beta0    R0 betatilde Rtilde sigmay sigmax  taux
-#> 1 0.625 0.021     0.442  0.714  4.716  1.096 1.198
+#>    beta0 R0 betatilde Rtilde sigmay sigmax  taux
+#> 1 -0.055  0      0.84  0.559  4.325  0.943 0.802
 #> 
 #> $bsetqnt
-#>           Area   2.5%    5%      50%     95%     97.5%  
-#> LL (URR)  "0.54" "0.417" "0.42"  "0.436" "0.441" "0.442"
-#> LL (NURR) "0.45" "0.393" "0.397" "0.42"  "0.438" "0.439"
-#> LH (URR)  "0.54" "0.409" "0.413" "0.434" "0.441" "0.442"
-#> LH (NURR) "0.45" "0.377" "0.382" "0.413" "0.437" "0.439"
-#> HL (URR)  "0"    "NA"    "NA"    "NA"    "NA"    "NA"   
-#> HL (NURR) "1"    "NA"    "NA"    "NA"    "NA"    "NA"   
-#> HH (URR)  "0"    "NA"    "NA"    "NA"    "NA"    "NA"   
-#> HH (NURR) "1"    "NA"    "NA"    "NA"    "NA"    "NA"
+#>            Area    2.5%      5%     50%    95%  97.5%
+#> LL (URR)  0.740   0.842   0.844   0.883  0.988  1.005
+#> LL (NURR) 0.250   0.859   0.865   0.969  1.079  1.092
+#> LH (URR)  0.734   0.844   0.847   0.945  1.223  1.269
+#> LH (NURR) 0.256   0.868   0.884   1.169  1.474  1.507
+#> HL (URR)  0.080  -9.319  -9.300  -9.179 -9.116 -9.112
+#> HL (NURR) 0.920 -12.544 -12.124  -9.762 -9.183 -9.155
+#> HH (URR)  0.344  -9.700  -9.642  -9.265 -9.095 -9.083
+#> HH (NURR) 0.656 -12.595 -12.274 -10.059 -9.234 -9.181
 ```
 
 To see the relevant parameters that emerged from the short, intermediate

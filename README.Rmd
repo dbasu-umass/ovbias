@@ -51,6 +51,7 @@ a4 <- -0.75
 a5 <- -0.25
 
 # Regressors
+set.seed(999)
 x1 <- rnorm(100, mean=0, sd=1)
 x2 <- rnorm(100, mean=1, sd=2)
 x3 <- rnorm(100, mean=2, sd=3)
