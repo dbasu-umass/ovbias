@@ -44,7 +44,8 @@ The output of the `bset1()` function is a list of two elements. The first elemen
 
 The output of the `bset2()` function is a list of two elements. The first element is a data frame of the parameters extracted from the three regressions; the second element of the list is a matrix containing the empirical distribution of the bias-adjusted treatment effect for the four regimes. 
 
-For more details see Basu, D. (2021). "Bounding Sets for Treatment Effects with Proportional Selection". Economics Department Working Paper Series. 307. University of Massachusetts Amhers. URL: https://scholarworks.umass.edu/econ_workingpaper/307  
+For more details see Basu, D. (2021). "Bounding Sets for Treatment Effects with Proportional Selection". Economics Department Working Paper Series. 307. University of Massachusetts Amhers. URL: https://scholarworks.umass.edu/econ_workingpaper/307. For latest version of the paper use URL: https://drive.google.com/file/d/1v-IGh9_pKqAu7ALucNGTWJXBx0A0STxJ/view?usp=sharing
+
 
 ## Installation
 

@@ -84,7 +84,9 @@ four regimes.
 For more details see Basu, D. (2021). “Bounding Sets for Treatment
 Effects with Proportional Selection”. Economics Department Working Paper
 Series. 307. University of Massachusetts Amhers. URL:
-<https://scholarworks.umass.edu/econ_workingpaper/307>
+<https://scholarworks.umass.edu/econ_workingpaper/307>. For latest
+version of the paper use URL:
+<https://drive.google.com/file/d/1v-IGh9_pKqAu7ALucNGTWJXBx0A0STxJ/view?usp=sharing>
 
 ## Installation
 
