@@ -47,7 +47,7 @@ bset1(
 \value{
 bset1 returns a list with the following two elements:
 
-\item{bsetpar}{a dataframe containing the parameters collected from the three regressions}
+\item{bsetpar}{a dataframe containing the parameters supplied by the user relating to the three regressions}
 \item{bsetqnt}{a matrix containing the quantiles of the empirical distribution of the bias-adjusted treatment effect}
 }
 \description{
