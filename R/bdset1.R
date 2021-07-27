@@ -18,7 +18,11 @@
 #' @importFrom magrittr "%>%"
 #' @importFrom rlang .data
 #'
-#' @return bset1 returns a list with two elements; the first element is a dataframe containing the parameters supplied by the user about the three regressions; the second element is a matrix containing the quantiles of the empirical distribution of the bias-adjusted treatment effect
+#' @return bset1 returns a list with the following two elements:
+#'
+#' \item{bsetpar}{a dataframe containing the parameters collected from the three regressions}
+#' \item{bsetqnt}{a matrix containing the quantiles of the empirical distribution of the bias-adjusted treatment effect}
+#'
 #' @references Basu, D. (2021). "Bounding Sets for Treatment Effects with Proportional Selection". Economics Department Working Paper Series. 307. University of Massachusetts Amhers. URL: https://scholarworks.umass.edu/econ_workingpaper/307
 #'
 #' @export
